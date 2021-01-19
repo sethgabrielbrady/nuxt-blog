@@ -18,7 +18,7 @@
                 loadedPost: {
                     author: "Seth Brady",
                     title: "An Amazing Post",
-                    thumbnaiink:'https://www.brookings.edu/wp-content/uploads/2017/11/metro_20171121_tech-empowers-tech-polarizes-mark-muro.jpg',
+                    thumbnail:'https://www.brookings.edu/wp-content/uploads/2017/11/metro_20171121_tech-empowers-tech-polarizes-mark-muro.jpg',
                     content: "The best content ever, here"
                 }
             }
