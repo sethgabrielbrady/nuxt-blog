@@ -5,19 +5,27 @@
         Get the latest tech news!
       </h1>
     </section>
-    <PostList/>
+    <PostList :posts="loadedPosts"/>
   </div>
 </template>
 
 <script>
-  import PostPreview from '@/components/Posts/PostPreview'
   import PostList from '@/components/Posts/PostList'
   export default {
     components: {
-      PostPreview,
       PostList
+    },
+    computed: {
+      loadedPosts(){
+        return this.$store.getters.loadedPosts
+      }
     }
-  }
+    // data() {
+    //   return {
+    //     loadedPosts: []
+    //   }
+    // },
+  };
 </script>
 
 <style scoped>

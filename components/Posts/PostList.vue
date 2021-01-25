@@ -2,25 +2,13 @@
     <div class="posts-page">
         <section class='post-lists'>
             <PostPreview
-                id='1'
+                v-for="post in posts"
+                :key="post.id"
+                :id="post.id"
                 :isAdmin="isAdmin"
-                title='First Post'
-                thumbnail='https://www.brookings.edu/wp-content/uploads/2017/11/metro_20171121_tech-empowers-tech-polarizes-mark-muro.jpg'
-                previewText='Some text here'
-            />
-            <PostPreview
-                id='2'
-                :isAdmin="isAdmin"
-                title='Second Post'
-                thumbnail='https://www.brookings.edu/wp-content/uploads/2017/11/metro_20171121_tech-empowers-tech-polarizes-mark-muro.jpg'
-                previewText='More text here'
-            />
-            <PostPreview
-                id='3'
-                :isAdmin="isAdmin"
-                title='Third Post'
-                thumbnail='https://www.brookings.edu/wp-content/uploads/2017/11/metro_20171121_tech-empowers-tech-polarizes-mark-muro.jpg'
-                previewText='Again, more text here'
+                :title="post.title"
+                :thumbnail="post.thumbnail"
+                :previewText="post.previewText"
             />
         </section>
     </div>
@@ -36,6 +24,10 @@
             isAdmin: {
                 type: Boolean,
                 default: false
+            },
+            posts: {
+                type: Array,
+                required: true
             }
         }
     }
