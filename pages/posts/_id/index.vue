@@ -17,21 +17,16 @@
 </template>
 
 <script>
+    import axios from  'axios'
     export default {
-     asyncData(context, callback) {
-        setTimeout(() => {
-             callback(null, {
-                loadedPost: {
-                    id: "1",
-                    title: "Post (ID: " + context.params.id+ ")",
-                    previewText:"This is a post",
-                    author: "Seth Brady",
-                    updatedDate: new Date(),
-                    content: "Some dummy text",
-                    thumbnail:"https://www.brookings.edu/wp-content/uploads/2017/11/metro_20171121_tech-empowers-tech-polarizes-mark-muro.jpg"
-                 }
-             });
-        }, 1000);
+     asyncData(context) {
+       return axios.get('https://nuxt-blog-47aad-default-rtdb.firebaseio.com/posts/' + context.params.id + '.json')
+       .then(res => {
+           return {
+               loadedPost: res.data
+           }
+       })
+       .catch(e => context.error(e))
      }
     }
 </script>
@@ -74,7 +69,7 @@
 
     @media (min-width: 768px) {
         .post-details {
-            flex-direction: row;
+            flex-direction: column;
         }
     }
 

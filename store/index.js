@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
+import axios from 'axios'
 
-const  createStore = () => {
+const createStore = () => {
     return new Vuex.Store({
         state: {
             loadedPosts: []
@@ -8,35 +9,49 @@ const  createStore = () => {
         mutations: {
             setPosts(state, posts){
                 state.loadedPosts = posts
+            },
+            addPost(state, post){
+                state.loadedPosts.push(post)
+
+            },
+            editPost(state, editedPost){
+                const postIndex = state.loadedPosts.findIndex(
+                    post => post.id === editedPost.id
+                );
+                state.loadedPosts[postIndex] = editedPost
             }
         },
         actions: {
             nuxtServerInit(vuexContext, context) {
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        vuexContext.commit('setPosts', [
-                            {
-                                id: '1',
-                                title: 'First Post',
-                                previewText:'This is a first post',
-                                thumbnail:'https:www.brookings.edu/wp-content/uploads/2017/11/metro_20171121_tech-empowers-tech-polarizes-mark-muro.jpg'
-                            },
-                            {
-                                id: '2',
-                                title: 'Second Post',
-                                previewText:'This is a second post',
-                                thumbnail:'https:www.brookings.edu/wp-content/uploads/2017/11/metro_20171121_tech-empowers-tech-polarizes-mark-muro.jpg'
-                            },
-                            {
-                                id: '3',
-                                title: 'Third Post',
-                                previewText:'This is a third post',
-                                thumbnail:'https:www.brookings.edu/wp-content/uploads/2017/11/metro_20171121_tech-empowers-tech-polarizes-mark-muro.jpg'
-                            }
-                        ]);
-                        resolve();
-                    }, 1000);
-                });
+                return axios.get('https://nuxt-blog-47aad-default-rtdb.firebaseio.com/posts.json')
+                .then(res => {
+                    const postArray = []
+                    for (const key in res.data ){
+                        postArray.push({ ...res.data[key], id: key })
+                    }
+                    vuexContext.commit('setPosts', postArray)
+                })
+                .catch(e => context.error(e))
+            },
+            addPost(vuexContext, post) {
+                const createdPost = {
+                    ...post,
+                    updatedDate: new Date()
+                }
+                return axios
+                .post('https://nuxt-blog-47aad-default-rtdb.firebaseio.com/posts.json', createdPost )
+                .then(result => {
+                    vuexContext.commit('addPost', { ...createdPost, id: result.data.name})
+                    this.$router.push('/admin')
+                })
+                .catch(e => console.log(e))
+            },
+            editPost(vuexContext, editedPost){
+                return axios.put('https://nuxt-blog-47aad-default-rtdb.firebaseio.com/posts/' + editedPost.id +'.json', editedPost)
+                .then(res => {
+                    vuexContext.commit('editPost', editedPost)
+                })
+                .catch(e => console.log(e))
             },
             setPosts(vuexContext, posts){
                 vuexContext.commit('setPosts', posts)
